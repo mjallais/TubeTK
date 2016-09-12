@@ -3,49 +3,42 @@
 import os
 import sys
 
+def CheckEnvironmentVariable(varName):
+    if varName in os.environ:
+        return os.environ[varName]
+    else:
+        print('%s not found!')%(varName)
+        print('  Set environment variable')
+        sys.exit( 1 )
+
+def CheckIfPathExists(path, name):
+    if not os.path.exists(path):
+        print('%s set by directory not found!')%(name)
+        print('  %s = %s')%(name, path)
+        sys.exit(1)
+
+def AppendSysPath(path):
+    BUILD_TYPE=CheckEnvironmentVariable('BUILD_TYPE')
+    # Append path libs
+    sys.path.append(os.path.join(os.path.join(path, 'Wrapping/Generators/Python'), BUILD_TYPE))
+    sys.path.append(os.path.join(path, 'lib'))
+
 
 try:
     import itk
 except:
-    ITK_BUILD_DIR = None
-    if 'ITK_BUILD_DIR' in os.environ:
-        ITK_BUILD_DIR = os.environ['ITK_BUILD_DIR']
-    else:
-        print('ITK_BUILD_DIR not found!')
-        print('  Set environment variable')
-        sys.exit( 1 )
-
-    if not os.path.exists(ITK_BUILD_DIR):
-        print('ITK_BUILD_DIR set by directory not found!')
-        print('  ITK_BUILD_DIR = ' + ITK_BUILD_DIR )
-        sys.exit(1)
-    # Append ITK libs
-    sys.path.append(os.path.join(ITK_BUILD_DIR, 'Wrapping/Generators/Python'))
-    sys.path.append(os.path.join(ITK_BUILD_DIR, 'lib'))
-
+    ITK_BUILD_DIR=CheckEnvironmentVariable('ITK_BUILD_DIR')
+    CheckIfPathExists(ITK_BUILD_DIR,'ITK_BUILD_DIR')
+    AppendSysPath(ITK_BUILD_DIR)
     import itk
 
 try:
     from itk import TubeTKITK
 except:
     # Path for TubeTK libs
-    TubeTK_BUILD_DIR=None
-    if 'TubeTK_BUILD_DIR' in os.environ:
-        TubeTK_BUILD_DIR = os.environ['TubeTK_BUILD_DIR']
-    else:
-        print('TubeTK_BUILD_DIR not found!')
-        print('  Set environment variable')
-        sys.exit(1)
-
-    if not os.path.exists(TubeTK_BUILD_DIR):
-        print('TubeTK_BUILD_DIR set by directory not found!')
-        print('  Set environment variable')
-        sys.exit(1)
-
-    # Append TubeTK libs
-    sys.path.append(os.path.join(TubeTK_BUILD_DIR, 'Wrapping/Generators/Python'))
-    sys.path.append(os.path.join(TubeTK_BUILD_DIR, 'lib'))
-
+    TubeTK_BUILD_DIR=CheckEnvironmentVariable('TubeTK_BUILD_DIR')
+    CheckIfPathExists(TubeTK_BUILD_DIR,'TubeTK_BUILD_DIR')
+    AppendSysPath(TubeTK_BUILD_DIR)
     from itk import TubeTKITK
 
 import sys
