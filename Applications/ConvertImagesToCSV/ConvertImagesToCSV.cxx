@@ -23,11 +23,23 @@ limitations under the License.
 
 #include <ios>
 
+<<<<<<< Updated upstream
 #include "tubeCLIFilterWatcher.h"
 #include "tubeCLIProgressReporter.h"
 #include "tubeMessage.h"
 #include "tubeStringUtilities.h"
 
+=======
+#include "tubeMessage.h"
+#include "tubeMacro.h"
+#include "tubeStringUtilities.h"
+
+// TubeTK includes
+#include <tubeConvertImagesToCSV.h>
+
+// ITK includes
+#include "itkCSVNumericObjectFileWriter.h"
+>>>>>>> Stashed changes
 #include <itkTimeProbesCollectorBase.h>
 #include <itkImageFileWriter.h>
 #include <itkImageFileReader.h>
@@ -54,6 +66,7 @@ int DoIt( int argc, char * argv[] )
   typedef float                                     InputPixelType;
   typedef itk::Image< InputPixelType, VDimension >  InputImageType;
   typedef itk::ImageFileReader< InputImageType >    ReaderType;
+<<<<<<< Updated upstream
 
   typename ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
@@ -67,11 +80,31 @@ int DoIt( int argc, char * argv[] )
                         + std::string(err.GetDescription()) );
     return EXIT_FAILURE;
     }
+=======
+  
+  typedef itk::tube::ConvertImagesToCSVFilter< InputImageType > ConvertImagesToCSVFilterType;
+  typename ConvertImagesToCSVFilterType::Pointer filter
+	= ConvertImagesToCSVFilterType::New();
+
+  typename ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName(inputImageFileName);
+  try
+  {
+	reader->Update();
+  }
+  catch (itk::ExceptionObject & err)
+  {
+	tube::ErrorMessage("Reading volume: Exception caught: "
+	  + std::string(err.GetDescription()));
+	return EXIT_FAILURE;
+  }
+>>>>>>> Stashed changes
   typename InputImageType::Pointer maskImage = reader->GetOutput();
 
   unsigned int numImages = 0;
   std::vector< typename InputImageType::Pointer > imageList;
   std::vector< std::string > imageFileNameList;
+<<<<<<< Updated upstream
   tube::StringToVector< std::string >( inputImageFileNameList,
     imageFileNameList );
   std::ofstream outFile( outputCSVFileName.c_str() );
@@ -143,6 +176,78 @@ int DoIt( int argc, char * argv[] )
   iterList.clear();
 
   outFile.close();
+=======
+  tube::StringToVector< std::string >(inputImageFileNameList,
+	imageFileNameList);
+
+  if (stride < 1)
+  {
+	stride = 1;
+  }
+  std::vector<std::string> fileName;
+  for (unsigned int i = 0; i < imageFileNameList.size(); ++i)
+  {
+	reader = ReaderType::New();
+	reader->SetFileName(imageFileNameList[i]);
+	char filePath[4096];
+	fileName.push_back(imageFileNameList[i]);
+	if (MET_GetFilePath(imageFileNameList[i].c_str(), filePath))
+	{
+	  fileName[i] = &(imageFileNameList[i][strlen(filePath)]);
+	}
+	try
+	{
+	  reader->Update();
+	}
+	catch (itk::ExceptionObject & err)
+	{
+	  tube::ErrorMessage("Reading volume: Exception caught: "
+		+ std::string(err.GetDescription()));
+	  return EXIT_FAILURE;
+	}
+	imageList.push_back(reader->GetOutput());
+	++numImages;
+  }
+
+  typedef vnl_matrix<InputPixelType> MatrixType;
+  const unsigned int ARows =  maskImage->GetLargestPossibleRegion().GetNumberOfPixels() / stride; // number of pixels/stride or less
+  const unsigned int ACols = imageFileNameList.size() + 1; // +1 is for the "class"
+  MatrixType matrix;
+  matrix.set_size(ARows, ACols);
+
+  filter->SetMaskImage(maskImage);
+  filter->SetImageList(imageList);
+  filter->SetStride(stride);
+  filter->SetNumImages(numImages);
+
+  filter->Update();
+
+  matrix = filter->GetMatrix();
+  unsigned int numberRows = filter->GetNumberRows();
+  MatrixType submatrix = matrix.extract(numberRows, ACols);
+
+  // write out the vnl_matrix object
+  typedef itk::CSVNumericObjectFileWriter<InputPixelType> WriterType;
+  WriterType::Pointer writer = WriterType::New();
+
+  writer->SetFieldDelimiterCharacter(',');
+  writer->SetFileName(outputCSVFileName);
+  writer->SetInput(&submatrix);
+
+  fileName.push_back("Class");
+  writer->SetColumnHeaders(fileName);
+
+  try
+  {
+	writer->Write();
+  }
+  catch (itk::ExceptionObject& exp)
+  {
+	std::cerr << "Exception caught!" << std::endl;
+	std::cerr << exp << std::endl;
+	return EXIT_FAILURE;
+  }
+>>>>>>> Stashed changes
 
   return EXIT_SUCCESS;
 }
@@ -153,6 +258,11 @@ int main( int argc, char * argv[] )
   PARSE_ARGS;
 
   // You may need to update this line if, in the project's .xml CLI file,
+<<<<<<< Updated upstream
   //   you change the variable name for the inputImageFileName.
   return tube::ParseArgsAndCallDoIt( inputImageFileName, argc, argv );
+=======
+  // you change the variable name for the inputImageFileName.
+  return tube::ParseArgsAndCallDoIt(inputImageFileName, argc, argv);
+>>>>>>> Stashed changes
 }
