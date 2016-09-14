@@ -23,23 +23,15 @@ limitations under the License.
 
 #include <ios>
 
-<<<<<<< Updated upstream
-#include "tubeCLIFilterWatcher.h"
-#include "tubeCLIProgressReporter.h"
-#include "tubeMessage.h"
-#include "tubeStringUtilities.h"
-
-=======
 #include "tubeMessage.h"
 #include "tubeMacro.h"
 #include "tubeStringUtilities.h"
 
 // TubeTK includes
-#include <tubeConvertImagesToCSV.h>
+#include "tubeConvertImagesToCSV.h"
 
 // ITK includes
 #include "itkCSVNumericObjectFileWriter.h"
->>>>>>> Stashed changes
 #include <itkTimeProbesCollectorBase.h>
 #include <itkImageFileWriter.h>
 #include <itkImageFileReader.h>
@@ -66,21 +58,6 @@ int DoIt( int argc, char * argv[] )
   typedef float                                     InputPixelType;
   typedef itk::Image< InputPixelType, VDimension >  InputImageType;
   typedef itk::ImageFileReader< InputImageType >    ReaderType;
-<<<<<<< Updated upstream
-
-  typename ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( inputImageFileName );
-  try
-    {
-    reader->Update();
-    }
-  catch( itk::ExceptionObject & err )
-    {
-    tube::ErrorMessage( "Reading volume: Exception caught: "
-                        + std::string(err.GetDescription()) );
-    return EXIT_FAILURE;
-    }
-=======
   
   typedef itk::tube::ConvertImagesToCSVFilter< InputImageType > ConvertImagesToCSVFilterType;
   typename ConvertImagesToCSVFilterType::Pointer filter
@@ -98,85 +75,12 @@ int DoIt( int argc, char * argv[] )
 	  + std::string(err.GetDescription()));
 	return EXIT_FAILURE;
   }
->>>>>>> Stashed changes
+
   typename InputImageType::Pointer maskImage = reader->GetOutput();
 
   unsigned int numImages = 0;
   std::vector< typename InputImageType::Pointer > imageList;
   std::vector< std::string > imageFileNameList;
-<<<<<<< Updated upstream
-  tube::StringToVector< std::string >( inputImageFileNameList,
-    imageFileNameList );
-  std::ofstream outFile( outputCSVFileName.c_str() );
-  for( unsigned int i = 0; i < imageFileNameList.size(); ++i )
-    {
-    reader = ReaderType::New();
-    reader->SetFileName( imageFileNameList[i] );
-    char filePath[4096];
-    std::string fileName = imageFileNameList[i];
-    if( MET_GetFilePath( imageFileNameList[i].c_str(), filePath ) )
-      {
-      fileName = &( imageFileNameList[i][ strlen( filePath ) ] );
-      }
-    outFile << fileName << ", ";
-    try
-      {
-      reader->Update();
-      }
-    catch( itk::ExceptionObject & err )
-      {
-      tube::ErrorMessage( "Reading volume: Exception caught: "
-                          + std::string(err.GetDescription()) );
-      return EXIT_FAILURE;
-      }
-    imageList.push_back( reader->GetOutput() );
-    ++numImages;
-    }
-  outFile << "Class" << std::endl;
-
-  typedef itk::ImageRegionIterator< InputImageType > IteratorType;
-
-  std::vector< IteratorType * > iterList;
-  for( unsigned int i = 0; i < numImages; ++i )
-    {
-    iterList.push_back( new IteratorType( imageList[i],
-        imageList[i]->GetLargestPossibleRegion() ) );
-    }
-
-  if( stride < 1 )
-    {
-    stride = 1;
-    }
-
-  IteratorType maskIter( maskImage, maskImage->GetLargestPossibleRegion() );
-  while( !maskIter.IsAtEnd() )
-    {
-    if( maskIter.Get() != 0 )
-      {
-      for( unsigned int i=0; i<numImages; ++i )
-        {
-        outFile << iterList[i]->Get() << ", ";
-        }
-      outFile << maskIter.Get() << std::endl;
-      }
-    for( int s=0; s<stride && !maskIter.IsAtEnd(); ++s )
-      {
-      for( unsigned int i=0; i<numImages; ++i )
-        {
-        ++(*iterList[i]);
-        }
-      ++maskIter;
-      }
-    }
-
-  for( unsigned int i=0; i<iterList.size(); ++i )
-    {
-    delete iterList[i];
-    }
-  iterList.clear();
-
-  outFile.close();
-=======
   tube::StringToVector< std::string >(inputImageFileNameList,
 	imageFileNameList);
 
@@ -247,7 +151,6 @@ int DoIt( int argc, char * argv[] )
 	std::cerr << exp << std::endl;
 	return EXIT_FAILURE;
   }
->>>>>>> Stashed changes
 
   return EXIT_SUCCESS;
 }
@@ -258,11 +161,7 @@ int main( int argc, char * argv[] )
   PARSE_ARGS;
 
   // You may need to update this line if, in the project's .xml CLI file,
-<<<<<<< Updated upstream
-  //   you change the variable name for the inputImageFileName.
-  return tube::ParseArgsAndCallDoIt( inputImageFileName, argc, argv );
-=======
   // you change the variable name for the inputImageFileName.
-  return tube::ParseArgsAndCallDoIt(inputImageFileName, argc, argv);
->>>>>>> Stashed changes
+  return tube::ParseArgsAndCallDoIt( inputImageFileName, argc, argv );
+
 }
