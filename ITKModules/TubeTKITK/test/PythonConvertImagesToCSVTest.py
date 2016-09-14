@@ -51,7 +51,6 @@ def main():
   inputImage=sys.argv[1]
   inputImageList=sys.argv[2]
   outputCSVFile=sys.argv[3]
-  stride=int(sys.argv[4])
 
   reader=itk.ImageFileReader.New(FileName=inputImage)
   reader.Update()
