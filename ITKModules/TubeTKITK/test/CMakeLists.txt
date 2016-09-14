@@ -43,7 +43,11 @@ if( ITK_WRAP_PYTHON )
         ${TEMP}/${MODULE_NAME}_NotVesselMaskTest1.mha
         0.5
         2
+<<<<<<< HEAD
     ENVIRONMENT ITK_BUILD_DIR=${ITK_DIR} TubeTK_BUILD_DIR=${TubeTK_BINARY_DIR} BUILD_TYPE=$<$<BOOL:WIN32>:$<CONFIG>>
+=======
+    ENVIRONMENT ITK_BUILD_DIR=${ITK_DIR} TubeTK_BUILD_DIR=${TubeTK_BINARY_DIR} BUILD_TYPE=$<$<BOOL:${WIN32}>:$<CONFIG>>
+>>>>>>> 2cf6cf1f115dd05ad455cd380b3e4944234571a9
     )
   # Test1 - Compare - PythonComputeTrainingMask
   Midas3FunctionAddTest( NAME
