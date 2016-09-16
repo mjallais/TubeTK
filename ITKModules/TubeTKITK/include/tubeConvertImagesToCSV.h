@@ -36,7 +36,7 @@ namespace tube
 
 template< typename TInputImage >
 class ConvertImagesToCSV:
-  public itk::ProcessObject
+  public itk::Object
 {
 public:
   /** Standard class typedefs. */
@@ -53,16 +53,16 @@ public:
   typedef TInputImage							InputImageType;
   typedef typename InputImageType::PixelType 	InputPixelType;
   
-  tubeWrapSetObjectMacro(MaskImage, InputImageType, ConvertImagesToCSVFilter);
-  tubeWrapGetObjectMacro(MaskImage, InputImageType, ConvertImagesToCSVFilter);
-  tubeWrapGetMacro(Matrix, vnl_matrix<typename InputPixelType>, ConvertImagesToCSVFilter);
+  tubeWrapSetObjectMacro(InputImage, InputImageType, ConvertImagesToCSVFilter);
+  tubeWrapGetObjectMacro(InputImage, InputImageType, ConvertImagesToCSVFilter);
+  tubeWrapGetMacro(Output, vnl_matrix<typename InputPixelType>, ConvertImagesToCSVFilter);
   tubeWrapGetMacro(Stride, int, ConvertImagesToCSVFilter);
   tubeWrapSetMacro(Stride, int, ConvertImagesToCSVFilter);
   tubeWrapSetMacro(NumImages, unsigned int, ConvertImagesToCSVFilter);
   tubeWrapGetMacro(NumImages, unsigned int, ConvertImagesToCSVFilter);
   tubeWrapSetMacro(NumberRows, unsigned int, ConvertImagesToCSVFilter);
   tubeWrapGetMacro(NumberRows, unsigned int, ConvertImagesToCSVFilter);
-  void SetImageList(const std::vector< typename InputImageType::Pointer >);
+  void SetNthInput(InputImageType*);
 
   tubeWrapCallMacro(Update, ConvertImagesToCSVFilter);
 

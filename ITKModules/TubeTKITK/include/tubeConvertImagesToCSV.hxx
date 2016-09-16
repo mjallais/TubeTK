@@ -38,9 +38,9 @@ ConvertImagesToCSV( void )
 template< class TInputImage >
 void
 ConvertImagesToCSV< TInputImage >::
-SetImageList(const std::vector< typename InputImageType::Pointer > imageList)
+SetNthInput(InputImageType* image)
 {
-  return m_ConvertImagesToCSVFilter->SetImageList(imageList);
+  return m_ConvertImagesToCSVFilter->SetNthInput(image);
 }
 
 template< typename TInputImage >

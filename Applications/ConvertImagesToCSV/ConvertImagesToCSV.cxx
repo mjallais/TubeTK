@@ -110,6 +110,7 @@ int DoIt( int argc, char * argv[] )
 	  return EXIT_FAILURE;
 	}
 	imageList.push_back(reader->GetOutput());
+	filter->SetNthInput(reader->GetOutput());
 	++numImages;
   }
 
@@ -119,14 +120,14 @@ int DoIt( int argc, char * argv[] )
   MatrixType matrix;
   matrix.set_size(ARows, ACols);
 
-  filter->SetMaskImage(maskImage);
-  filter->SetImageList(imageList);
+  filter->SetInputImage(maskImage);
+  //filter->SetImageList(imageList);
   filter->SetStride(stride);
   filter->SetNumImages(numImages);
 
   filter->Update();
 
-  matrix = filter->GetMatrix();
+  matrix = filter->GetOutput();
   unsigned int numberRows = filter->GetNumberRows();
   MatrixType submatrix = matrix.extract(numberRows, ACols);
 

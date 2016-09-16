@@ -49,16 +49,24 @@ def main():
     print("Usage: %s InputImage InputImageList OutputCSVFile stride"%sys.argv[0])
     return 1
   inputImage=sys.argv[1]
-  inputImageList=sys.argv[2]
+  inputImageFileNameList=sys.argv[2]
   outputCSVFile=sys.argv[3]
 
   reader=itk.ImageFileReader.New(FileName=inputImage)
   reader.Update()
-  convertFilter=TubeTKITK.ConvertImagesToCSV.New(reader)
-  convertFilter.SetImageList(inputImageList)
+  convertFilter=TubeTKITK.ConvertImagesToCSV.New(reader.GetOutput())
+  
+  imageFileNameList = inputImageFileNameList.split(',')
+  print ("list : %s" %imageFileNameList)
+  for image in imageFileNameList:
+	reader=itk.ImageFileReader.New(FileName=image)
+	reader.Update()
+	convertFilter.SetNthInput(reader)
+  
+  #convertFilter.SetImageList(imageList)
   convertFilter.SetStride(stride)
   convertFilter.Update()
-  writer=itk.CSVNumericObjectFileWriter.New(convertFilter,FileName=outputCSVFile)
+  writer=itk.CSVNumericObjectFileWriter.New(convertFilter.GetMatrix(),FileName=outputCSVFile)
   writer.Update()
 
   

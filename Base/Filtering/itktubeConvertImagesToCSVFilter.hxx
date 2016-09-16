@@ -32,24 +32,18 @@ template< class TInputImage >
 ConvertImagesToCSVFilter< TInputImage >
 ::ConvertImagesToCSVFilter( void )
 {
-  m_MaskImage = NULL;
+  m_InputImage = NULL;
   m_NumberRows = 0;
 }
 
-/** GenerateData */
 template< class TInputImage >
 void
 ConvertImagesToCSVFilter< TInputImage >
 ::Update( void )
 {
-  std::cout << " Je suis ici : GenerateData " << std::endl;
-  const unsigned int ARows = m_MaskImage->GetLargestPossibleRegion().GetNumberOfPixels() / m_Stride; // number of pixels/stride or less
-  const unsigned int ACols = m_ImageList.size() + 1; // +1 is for the "class"
-  m_Matrix.set_size(ARows, ACols);
-  std::cout << "filter matrix size :" << m_Matrix.size() << std::endl;
-
-  // 5
-  // declaration d'iteratortype dans le .h
+  const unsigned int ARows = m_InputImage->GetLargestPossibleRegion().GetNumberOfPixels() / m_Stride; // number of pixels/stride or less
+  const unsigned int ACols = m_ImageList.size() + 1;
+  m_Output.set_size(ARows, ACols);
 
   std::vector< IteratorType * > iterList;
   for (unsigned int i = 0; i < m_NumImages; ++i)
@@ -58,8 +52,7 @@ ConvertImagesToCSVFilter< TInputImage >
 	  m_ImageList[i]->GetLargestPossibleRegion()));
   }
 
-  // 6
-  IteratorType maskIter(m_MaskImage, m_MaskImage->GetLargestPossibleRegion());
+  IteratorType maskIter(m_InputImage, m_InputImage->GetLargestPossibleRegion());
   unsigned int i = 0;
   while (!maskIter.IsAtEnd())
   {
@@ -67,10 +60,10 @@ ConvertImagesToCSVFilter< TInputImage >
 	{
 	  for (i = 0; i<m_NumImages; ++i)
 	  {
-		m_Matrix(m_NumberRows, i) = iterList[i]->Get();
+		m_Output(m_NumberRows, i) = iterList[i]->Get();
 	  }
 	  
-	  m_Matrix(m_NumberRows, i) = maskIter.Get();
+	  m_Output(m_NumberRows, i) = maskIter.Get();
 	  m_NumberRows++;
 	}
 	for (int s = 0; s<m_Stride && !maskIter.IsAtEnd(); ++s)
@@ -83,21 +76,19 @@ ConvertImagesToCSVFilter< TInputImage >
 	}
   }
 
-  // 7
   for (unsigned int i = 0; i<iterList.size(); ++i)
   {
 	delete iterList[i];
   }
   iterList.clear();
-  std::cout<< "ConvertImagesToCSVFilter::Update() finished."<<std::endl;
 }
 
 template< class TInputImage >
 void
 ConvertImagesToCSVFilter< TInputImage >::
-SetImageList(const std::vector< typename InputImageType::Pointer > imageList)
+SetNthInput(InputImageType* image)
 {
-  this->m_ImageList = imageList;
+  this->m_ImageList.push_back (image);
 }
 
 

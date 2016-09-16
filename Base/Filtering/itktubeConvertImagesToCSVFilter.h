@@ -37,7 +37,7 @@ class ConvertImagesToCSVFilter : public Object
 public:
   /** Standard class typedefs. */
   typedef ConvertImagesToCSVFilter			Self;
-  typedef Object						Superclass;
+  typedef Object							Superclass;
   typedef SmartPointer< Self > 				Pointer;
   typedef SmartPointer< const Self >		ConstPointer;
   
@@ -58,10 +58,10 @@ public:
   itkStaticConstMacro( ImageDimension, unsigned int,
                       TInputImage::ImageDimension );	
 	
-  itkSetObjectMacro(MaskImage, InputImageType);
-  itkGetObjectMacro(MaskImage, InputImageType);
+  itkSetObjectMacro(InputImage, InputImageType);
+  itkGetObjectMacro(InputImage, InputImageType);
   
-  itkGetConstMacro(Matrix, vnl_matrix<typename InputPixelType>);
+  itkGetConstMacro(Output, vnl_matrix<typename InputPixelType>);
 
   itkGetMacro(Stride, int);
   itkSetMacro(Stride, int);
@@ -69,7 +69,7 @@ public:
   itkSetMacro(NumImages, unsigned int);
   itkSetMacro(NumberRows, unsigned int);
   itkGetMacro(NumberRows, unsigned int);
-  void SetImageList(const std::vector< typename InputImageType::Pointer >);
+  void SetNthInput(InputImageType*);
 	
   void Update( void ); 
 
@@ -85,8 +85,8 @@ private:
   ConvertImagesToCSVFilter ( const Self& );
   void operator=( const Self& );
   
-  typename InputImageType::Pointer					m_MaskImage;
-  vnl_matrix <InputPixelType>						m_Matrix;
+  typename InputImageType::Pointer					m_InputImage;
+  vnl_matrix <InputPixelType>						m_Output;
   std::vector< typename InputImageType::Pointer >	m_ImageList;
   int												m_Stride;
   unsigned int										m_NumImages;
