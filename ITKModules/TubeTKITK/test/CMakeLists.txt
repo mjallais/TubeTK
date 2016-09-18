@@ -63,8 +63,9 @@ if( ITK_WRAP_PYTHON )
   Midas3FunctionAddTestWithEnv( NAME TubeTKITK.Python.ConvertImagesToCSV-Test1
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_NAME}Test.py
       MIDAS{GDS0015_Large-TrainingMask.mha.md5}
-      MIDAS{GDS0015_Large.mha.md5},MIDAS{ES0015_Large.mha.md5}
+      MIDAS{GDS0015_Large-TrainingMask.mha.md5},MIDAS{GDS0015_Large-TrainingMask.mha.md5}
       ${TEMP}/${MODULE_NAME}Test1.csv
+      5
     ENVIRONMENT ITK_BUILD_DIR=${ITK_DIR} TubeTK_BUILD_DIR=${TubeTK_BINARY_DIR} BUILD_TYPE=$<$<BOOL:WIN32>:$<CONFIG>>
       )
 

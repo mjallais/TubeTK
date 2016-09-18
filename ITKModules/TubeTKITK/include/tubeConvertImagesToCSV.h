@@ -50,12 +50,12 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(ConvertImagesToCSV, Object);
 
-  typedef TInputImage							InputImageType;
-  typedef typename InputImageType::PixelType 	InputPixelType;
-  
+  typedef TInputImage                          InputImageType;
+  typedef typename InputImageType::PixelType   InputPixelType;
+
   tubeWrapSetObjectMacro(InputImage, InputImageType, ConvertImagesToCSVFilter);
   tubeWrapGetObjectMacro(InputImage, InputImageType, ConvertImagesToCSVFilter);
-  tubeWrapGetMacro(Output, vnl_matrix<typename InputPixelType>, ConvertImagesToCSVFilter);
+  tubeWrapGetMacro(Output, vnl_matrix<InputPixelType>, ConvertImagesToCSVFilter);
   tubeWrapGetMacro(Stride, int, ConvertImagesToCSVFilter);
   tubeWrapSetMacro(Stride, int, ConvertImagesToCSVFilter);
   tubeWrapSetMacro(NumImages, unsigned int, ConvertImagesToCSVFilter);
@@ -76,7 +76,8 @@ private:
   ConvertImagesToCSV(const Self &);
   void operator=(const Self &);
 
-  typedef itk::tube::ConvertImagesToCSVFilter< InputImageType > ConvertImagesToCSVFilterType;
+  typedef itk::tube::ConvertImagesToCSVFilter< InputImageType >
+                                               ConvertImagesToCSVFilterType;
   typename ConvertImagesToCSVFilterType::Pointer m_ConvertImagesToCSVFilter;
 
 };
@@ -87,29 +88,3 @@ private:
 #endif
 
 #endif // End !defined( __tubeCropImage_h )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

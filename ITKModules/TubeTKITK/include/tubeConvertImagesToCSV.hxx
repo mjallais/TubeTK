@@ -40,7 +40,7 @@ void
 ConvertImagesToCSV< TInputImage >::
 SetNthInput(InputImageType* image)
 {
-  return m_ConvertImagesToCSVFilter->SetNthInput(image);
+  m_ConvertImagesToCSVFilter->SetNthInput(image);
 }
 
 template< typename TInputImage >
@@ -57,4 +57,3 @@ ConvertImagesToCSV< TInputImage >
 
 
 #endif
-  

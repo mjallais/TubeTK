@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
 *=========================================================================*/
-#ifndef __itktubeConvertImageToCSVFilter_h
-#define __itktubeConvertImageToCSVFilter_h
+#ifndef __itktubeConvertImagesToCSVFilter_h
+#define __itktubeConvertImagesToCSVFilter_h
 
 #include <itkObject.h>
 #include <itkImageFileReader.h>
@@ -33,20 +33,20 @@ namespace tube
 
  template< class TInputImage >
 class ConvertImagesToCSVFilter : public Object
-  {
+{
 public:
   /** Standard class typedefs. */
-  typedef ConvertImagesToCSVFilter			Self;
-  typedef Object							Superclass;
-  typedef SmartPointer< Self > 				Pointer;
-  typedef SmartPointer< const Self >		ConstPointer;
-  
-  typedef TInputImage                   		InputImageType;  
-  typedef typename InputImageType::Pointer		ImagePointer;
-  typedef typename InputImageType::PixelType 	InputPixelType;
-  typedef typename InputImageType::IndexType 	IndexType;
-  typedef ImageFileReader< InputImageType >		ReaderType;
-  typedef ImageRegionIterator< InputImageType >	IteratorType;
+  typedef ConvertImagesToCSVFilter      Self;
+  typedef Object                        Superclass;
+  typedef SmartPointer< Self >          Pointer;
+  typedef SmartPointer< const Self >    ConstPointer;
+
+  typedef TInputImage                           InputImageType;
+  typedef typename InputImageType::Pointer      ImagePointer;
+  typedef typename InputImageType::PixelType    InputPixelType;
+  typedef typename InputImageType::IndexType    IndexType;
+  typedef ImageFileReader< InputImageType >     ReaderType;
+  typedef ImageRegionIterator< InputImageType > IteratorType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -56,12 +56,12 @@ public:
 
   /** ImageDimension constants */
   itkStaticConstMacro( ImageDimension, unsigned int,
-                      TInputImage::ImageDimension );	
-	
+                      TInputImage::ImageDimension );
+
   itkSetObjectMacro(InputImage, InputImageType);
   itkGetObjectMacro(InputImage, InputImageType);
-  
-  itkGetConstMacro(Output, vnl_matrix<typename InputPixelType>);
+
+  itkGetConstMacro(Output, vnl_matrix<InputPixelType>);
 
   itkGetMacro(Stride, int);
   itkSetMacro(Stride, int);
@@ -70,37 +70,36 @@ public:
   itkSetMacro(NumberRows, unsigned int);
   itkGetMacro(NumberRows, unsigned int);
   void SetNthInput(InputImageType*);
-	
-  void Update( void ); 
+
+  void Update( void );
 
 protected:
-  
+
   ConvertImagesToCSVFilter ( void );
   ~ConvertImagesToCSVFilter(void) {};
   //void GenerateData( void );
   void PrintSelf( std::ostream& os, Indent indent ) const;
-	
-  
+
+
 private:
   ConvertImagesToCSVFilter ( const Self& );
   void operator=( const Self& );
-  
-  typename InputImageType::Pointer					m_InputImage;
-  vnl_matrix <InputPixelType>						m_Output;
-  std::vector< typename InputImageType::Pointer >	m_ImageList;
-  int												m_Stride;
-  unsigned int										m_NumImages;
-  unsigned int										m_NumberRows;
+
+  typename InputImageType::Pointer                 m_InputImage;
+  vnl_matrix <InputPixelType>                      m_Output;
+  std::vector< typename InputImageType::Pointer >  m_ImageList;
+  int                                              m_Stride;
+  unsigned int                                     m_NumImages;
+  unsigned int                                     m_NumberRows;
   
 }; // End class ConvertImagesToCSVFilter
 
 } // End namespace tube
 
 } // End namespace itk
-  
+
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itktubeConvertImagesToCSVFilter.hxx"
 #endif
 
 #endif // End !defined(_itktubeConvertImagesToCSVFilter_h)
-  

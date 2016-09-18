@@ -45,12 +45,13 @@ import itk
 from itk import TubeTKITK
 
 def main():
-  if len(sys.argv) != 4:
+  if len(sys.argv) != 5:
     print("Usage: %s InputImage InputImageList OutputCSVFile stride"%sys.argv[0])
     return 1
   inputImage=sys.argv[1]
   inputImageFileNameList=sys.argv[2]
   outputCSVFile=sys.argv[3]
+  stride=int(sys.argv[4])
 
   reader=itk.ImageFileReader.New(FileName=inputImage)
   reader.Update()
@@ -59,9 +60,9 @@ def main():
   imageFileNameList = inputImageFileNameList.split(',')
   print ("list : %s" %imageFileNameList)
   for image in imageFileNameList:
-	reader=itk.ImageFileReader.New(FileName=image)
-	reader.Update()
-	convertFilter.SetNthInput(reader)
+    reader=itk.ImageFileReader.New(FileName=image)
+    reader.Update()
+    convertFilter.SetNthInput(reader.GetOutput())
   
   #convertFilter.SetImageList(imageList)
   convertFilter.SetStride(stride)
