@@ -121,7 +121,6 @@ int DoIt( int argc, char * argv[] )
   matrix.set_size(ARows, ACols);
 
   filter->SetInputImage(maskImage);
-  //filter->SetImageList(imageList);
   filter->SetStride(stride);
   filter->SetNumImages(numImages);
 

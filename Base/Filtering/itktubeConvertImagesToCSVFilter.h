@@ -63,8 +63,8 @@ public:
 
   itkGetConstMacro(Output, vnl_matrix<InputPixelType>);
 
-  itkGetMacro(Stride, int);
-  itkSetMacro(Stride, int);
+  itkGetMacro(Stride, unsigned int);
+  itkSetMacro(Stride, unsigned int);
   itkGetMacro(NumImages, unsigned int);
   itkSetMacro(NumImages, unsigned int);
   itkSetMacro(NumberRows, unsigned int);
