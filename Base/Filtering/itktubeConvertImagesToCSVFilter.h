@@ -22,6 +22,7 @@
 #include <itkImage.h>
 #include <itkImageFileReader.h>
 #include <itkImageRegionIterator.h>
+#include <itkSimpleDataObjectDecorator.h>
 
 #include "tubeMessage.h"
 
@@ -56,31 +57,30 @@ public:
   typedef ImageFileReader< InputImageType >     ReaderType;
   typedef ImageRegionIterator< InputImageType > IteratorType;
 
+  typedef SimpleDataObjectDecorator<vnl_matrix <InputPixelType> > OutputType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ConvertImagesToCSVFilter, ProcessObject);
+  itkTypeMacro( ConvertImagesToCSVFilter, ProcessObject );
 
   /** ImageDimension constants */
   itkStaticConstMacro( ImageDimension, unsigned int,
                       TInputMask::ImageDimension );
 
-  itkSetObjectMacro(InputMask, InputMaskType);
-  itkGetObjectMacro(InputMask, InputMaskType);
+  itkSetObjectMacro( InputMask, InputMaskType );
+  itkGetObjectMacro( InputMask, InputMaskType );
 
-  itkGetMacro(Output, vnl_matrix <InputPixelType>);
+  OutputType* GetOutput();
 
-  itkGetMacro(Stride, unsigned int);
-  itkSetMacro(Stride, unsigned int);
-  itkGetMacro(NumImages, unsigned int);
-  itkSetMacro(NumImages, unsigned int);
-  itkSetMacro(NumberRows, unsigned int);
-  itkGetMacro(NumberRows, unsigned int);
-  void AddImage(InputImageType*);
-
-  //void Update( void );
+  itkGetMacro( Stride, unsigned int );
+  itkSetMacro( Stride, unsigned int );
+  itkGetMacro( NumImages, unsigned int );
+  itkSetMacro( NumImages, unsigned int );
+  itkSetMacro( NumberRows, unsigned int );
+  itkGetMacro( NumberRows, unsigned int );
+  void AddImage( InputImageType* );
 
 protected:
 
@@ -94,7 +94,7 @@ private:
   void operator=( const Self& );
 
   typename InputMaskType::Pointer                  m_InputMask;
-  vnl_matrix <InputPixelType>                      m_Output;
+  vnl_matrix <InputPixelType>                      m_VnlOutput;
   std::vector< typename InputImageType::Pointer >  m_ImageList;
   int                                              m_Stride;
   unsigned int                                     m_NumImages;

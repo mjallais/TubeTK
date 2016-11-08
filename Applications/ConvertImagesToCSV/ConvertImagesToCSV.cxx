@@ -44,14 +44,14 @@ limitations under the License.
 // Must do a forward declaration of DoIt before including
 // tubeCLIHelperFunctions
 template< class TPixel, unsigned int VDimension >
-int DoIt(int argc, char * argv[]);
+int DoIt( int argc, char * argv[] );
 
 // Must follow include of "...CLP.h" and forward declaration of int DoIt( ... ).
 #include "tubeCLIHelperFunctions.h"
 
 // Your code should be within the DoIt function...
 template< class TPixel, unsigned int VDimension >
-int DoIt(int argc, char * argv[])
+int DoIt( int argc, char * argv[] )
 {
   PARSE_ARGS;
   std::cout << "Je suis la 1" << std::endl;
@@ -67,13 +67,14 @@ int DoIt(int argc, char * argv[])
 
   typedef itk::tube::ConvertImagesToCSVFilter< InputMaskType, InputImageType >
     ConvertImagesToCSVFilterType;
-  typename ConvertImagesToCSVFilterType::Pointer filter = ConvertImagesToCSVFilterType::New();
+  typename ConvertImagesToCSVFilterType::Pointer filter
+          = ConvertImagesToCSVFilterType::New();
   std::cout << "Je suis la 1.2" << std::endl;
 
   typename MaskReaderType::Pointer readerMask = MaskReaderType::New();
   std::cout << "Je suis la 1.2.1" << std::endl;
 
-  readerMask->SetFileName(inputImageFileName);
+  readerMask->SetFileName( inputImageFileName );
   std::cout << "Je suis la 1.3" << std::endl;
 
   try
@@ -83,9 +84,9 @@ int DoIt(int argc, char * argv[])
     std::cout << "Je suis la 1.4" << std::endl;
 
   }
-  catch (itk::ExceptionObject & err)
+  catch ( itk::ExceptionObject & err )
   {
-    tube::ErrorMessage("Reading volume: Exception caught: "
+    tube::ErrorMessage( "Reading volume: Exception caught: "
       + std::string(err.GetDescription()));
     std::cout << "Je suis la 1.5" << std::endl;
 
@@ -97,36 +98,36 @@ int DoIt(int argc, char * argv[])
 
   unsigned int numImages = 0;
   std::vector< std::string > imageFileNameList;
-  tube::StringToVector< std::string >(inputImageFileNameList,
-    imageFileNameList);
+  tube::StringToVector< std::string >( inputImageFileNameList,
+    imageFileNameList );
 
-  if (stride < 1)
+  if( stride < 1 )
   {
     stride = 1;
   }
   typename ReaderType::Pointer reader;
   std::vector<std::string> fileName;
-  for (unsigned int i = 0; i < imageFileNameList.size(); ++i)
+  for( unsigned int i = 0; i < imageFileNameList.size(); ++i )
   {
     reader = ReaderType::New();
-    reader->SetFileName(imageFileNameList[i]);
+    reader->SetFileName( imageFileNameList[i] );
     char filePath[4096];
-    fileName.push_back(imageFileNameList[i]);
-    if (MET_GetFilePath(imageFileNameList[i].c_str(), filePath))
-    {
-      fileName[i] = &(imageFileNameList[i][strlen(filePath)]);
-    }
+    fileName.push_back( imageFileNameList[i] );
+    if( MET_GetFilePath( imageFileNameList[i].c_str(), filePath) )
+      {
+      fileName[i] = &( imageFileNameList[i][strlen(filePath)] );
+      }
     try
-    {
+      {
       reader->Update();
-    }
-    catch (itk::ExceptionObject & err)
-    {
-      tube::ErrorMessage("Reading volume: Exception caught: "
-        + std::string(err.GetDescription()));
+      }
+    catch ( itk::ExceptionObject & err )
+      {
+      tube::ErrorMessage( "Reading volume: Exception caught: "
+        + std::string(err.GetDescription()) );
       return EXIT_FAILURE;
-    }
-    filter->AddImage(reader->GetOutput());
+      }
+    filter->AddImage( reader->GetOutput() );
     ++numImages;
   }
   std::cout << "Je suis la 3" << std::endl;
@@ -138,57 +139,56 @@ int DoIt(int argc, char * argv[])
   // +1 is for the "class"
   const unsigned int ACols = imageFileNameList.size() + 1;
   MatrixType matrix;
-  matrix.set_size(ARows, ACols);
+  matrix.set_size( ARows, ACols );
   std::cout << "Je suis la 4" << std::endl;
 
-  filter->SetInputMask(inputMask);
-  filter->SetStride(stride);
-  filter->SetNumImages(numImages);
+  filter->SetInputMask( inputMask );
+  filter->SetStride( stride );
+  filter->SetNumImages( numImages );
 
   filter->Update();
 
-  matrix = filter->GetOutput();
+  matrix = filter->GetOutput()->Get();
   std::cout << "matrix :" << matrix << std::endl;
   unsigned int numberRows = filter->GetNumberRows();
-  MatrixType submatrix = matrix.extract(numberRows, ACols);
+  MatrixType submatrix = matrix.extract( numberRows, ACols );
 
   // write out the vnl_matrix object
   typedef itk::CSVNumericObjectFileWriter<InputPixelType> WriterType;
   WriterType::Pointer writer = WriterType::New();
   std::cout << "Je suis la 5" << std::endl;
 
-  writer->SetFieldDelimiterCharacter(',');
-  writer->SetFileName(outputCSVFileName);
-  writer->SetInput(&submatrix);
+  writer->SetFieldDelimiterCharacter( ',' );
+  writer->SetFileName( outputCSVFileName );
+  writer->SetInput( &submatrix );
 
-  fileName.push_back("Class");
-  writer->SetColumnHeaders(fileName);
+  fileName.push_back( "Class" );
+  writer->SetColumnHeaders( fileName );
   std::cout << "Je suis la 6" << std::endl;
-  writer->Update();
   std::cout << "je suis la 6.1" << std::endl;
 
   try
-  {
-    writer->Write();
-  }
-  catch (itk::ExceptionObject& exp)
-  {
+    {
+    writer->Update();
+    }
+  catch ( itk::ExceptionObject& exp )
+    {
     std::cerr << "Exception caught!" << std::endl;
     std::cerr << exp << std::endl;
     return EXIT_FAILURE;
-  }
+    }
   std::cout << "Je suis la 7" << std::endl;
 
   return EXIT_SUCCESS;
 }
 
 // Main
-int main(int argc, char * argv[])
+int main( int argc, char * argv[] )
 {
   PARSE_ARGS;
 
   // You may need to update this line if, in the project's .xml CLI file,
   // you change the variable name for the inputImageFileName.
-  return tube::ParseArgsAndCallDoIt(inputImageFileName, argc, argv);
+  return tube::ParseArgsAndCallDoIt( inputImageFileName, argc, argv );
 
 }
