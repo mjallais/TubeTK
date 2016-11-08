@@ -34,6 +34,7 @@ ConvertImagesToCSVFilter< TInputMask, TInputImage >
 {
   m_InputMask = NULL;
   m_NumberRows = 0;
+  this->ProcessObject::SetNthOutput( 0, OutputType::New().GetPointer() );
 }
 
 template< class  TInputMask, class TInputImage >
@@ -44,48 +45,60 @@ ConvertImagesToCSVFilter< TInputMask, TInputImage >
   const unsigned int ARows =
     m_InputMask->GetLargestPossibleRegion().GetNumberOfPixels() / m_Stride;
   const unsigned int ACols = m_ImageList.size() + 1;
-  m_Output.set_size(ARows, ACols);
+  m_VnlOutput.set_size( ARows, ACols );
   std::vector< IteratorType * > iterList;
-  for (unsigned int i = 0; i < m_NumImages; ++i)
+  for( unsigned int i = 0; i < m_NumImages; ++i )
     {
-    iterList.push_back(new IteratorType(m_ImageList[i],
-    m_ImageList[i]->GetLargestPossibleRegion()));
+    iterList.push_back( new IteratorType(m_ImageList[i],
+    m_ImageList[i]->GetLargestPossibleRegion()) );
     }
-  MaskIteratorType maskIter(m_InputMask, m_InputMask->GetLargestPossibleRegion());
+  MaskIteratorType maskIter( m_InputMask,
+                            m_InputMask->GetLargestPossibleRegion() );
   unsigned int i = 0;
-  while (!maskIter.IsAtEnd())
+  while( !maskIter.IsAtEnd() )
     {
-    if (maskIter.Get() != 0)
+    if( maskIter.Get() != 0 )
       {
-      for (i = 0; i<m_NumImages; ++i)
+      for( i = 0; i<m_NumImages; ++i )
         {
-        m_Output(m_NumberRows, i) = iterList[i]->Get();
+        m_VnlOutput( m_NumberRows, i ) = iterList[i]->Get();
         }
-      m_Output(m_NumberRows, i) = maskIter.Get();
+      m_VnlOutput( m_NumberRows, i ) = maskIter.Get();
       m_NumberRows++;
       }
-    for (int s = 0; s<m_Stride && !maskIter.IsAtEnd(); ++s)
+    for( int s = 0; s<m_Stride && !maskIter.IsAtEnd(); ++s )
       {
-      for (unsigned int i = 0; i<m_NumImages; ++i)
+      for( unsigned int i = 0; i<m_NumImages; ++i )
         {
-        ++(*iterList[i]);
+        ++( *iterList[i] );
         }
       ++maskIter;
       }
     }
-  for (unsigned int i = 0; i<iterList.size(); ++i)
+  for( unsigned int i = 0; i<iterList.size(); ++i )
     {
     delete iterList[i];
     }
   iterList.clear();
+  typename OutputType::Pointer outputPtr = this->GetOutput();
+  outputPtr->Set( m_VnlOutput );
+}
+
+template< class  TInputMask, class TInputImage >
+SimpleDataObjectDecorator<vnl_matrix <typename TInputImage::PixelType> >*
+ConvertImagesToCSVFilter< TInputMask, TInputImage >
+::GetOutput()
+{
+  // we assume that the first output is of the templated type
+  return itkDynamicCastInDebugMode< OutputType * >( this->GetPrimaryOutput() );
 }
 
 template< class  TInputMask, class TInputImage >
 void
 ConvertImagesToCSVFilter< TInputMask, TInputImage >::
-AddImage(InputImageType* image)
+AddImage( InputImageType* image )
 {
-  this->m_ImageList.push_back (image);
+  this->m_ImageList.push_back( image );
 }
 
 /** PrintSelf */
@@ -94,7 +107,7 @@ void
 ConvertImagesToCSVFilter< TInputMask, TInputImage >::
 PrintSelf( std::ostream & os, Indent indent ) const
 {
-  Superclass::PrintSelf(os, indent);
+  Superclass::PrintSelf( os, indent );
   os << indent << "Stride = " << m_Stride << std::endl;
   os << indent << "NumImages = " << m_NumImages << std::endl;
 }
