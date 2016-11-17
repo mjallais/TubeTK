@@ -57,7 +57,8 @@ public:
   typedef ImageFileReader< InputImageType >     ReaderType;
   typedef ImageRegionIterator< InputImageType > IteratorType;
 
-  typedef SimpleDataObjectDecorator<vnl_matrix <InputPixelType> > OutputType;
+  typedef vnl_matrix< InputPixelType >                VnlMatrixType;
+  typedef SimpleDataObjectDecorator< VnlMatrixType >  OutputType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -94,7 +95,7 @@ private:
   void operator=( const Self& );
 
   typename InputMaskType::Pointer                  m_InputMask;
-  vnl_matrix <InputPixelType>                      m_VnlOutput;
+  VnlMatrixType                                    m_VnlOutput;
   std::vector< typename InputImageType::Pointer >  m_ImageList;
   int                                              m_Stride;
   unsigned int                                     m_NumImages;

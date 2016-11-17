@@ -36,11 +36,12 @@ ConvertImagesToCSV( void )
 }
 
 template< class TInputMask, class TInputImage >
-itk::SimpleDataObjectDecorator<vnl_matrix <typename TInputImage::PixelType> >*
+typename itk::tube::ConvertImagesToCSVFilter< TInputMask, TInputImage >
+::VnlMatrixType
 ConvertImagesToCSV< TInputMask, TInputImage >::
 GetOutput()
 {
-  return m_ConvertImagesToCSVFilter->GetOutput();
+  return m_ConvertImagesToCSVFilter->GetOutput()->Get();
 }
 
 template< class TInputMask, class TInputImage >
