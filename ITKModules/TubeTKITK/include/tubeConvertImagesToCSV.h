@@ -56,15 +56,12 @@ public:
   typedef TInputImage                                     InputImageType;
   typedef typename InputImageType::PixelType              InputPixelType;
 
-  typedef itk::SimpleDataObjectDecorator< vnl_matrix < InputPixelType >>
-    OutputType;
-
   typedef itk::tube::ConvertImagesToCSVFilter< InputMaskType, InputImageType >
     ConvertImagesToCSVFilterType;
 
   tubeWrapSetObjectMacro( InputMask, InputMaskType, ConvertImagesToCSVFilter );
   tubeWrapGetObjectMacro( InputMask, InputMaskType, ConvertImagesToCSVFilter );
-  OutputType* GetOutput();
+  typename ConvertImagesToCSVFilterType::VnlMatrixType GetOutput();
   tubeWrapGetMacro( Stride, unsigned int, ConvertImagesToCSVFilter );
   tubeWrapSetMacro( Stride, unsigned int, ConvertImagesToCSVFilter );
   tubeWrapSetMacro( NumImages, unsigned int, ConvertImagesToCSVFilter );
