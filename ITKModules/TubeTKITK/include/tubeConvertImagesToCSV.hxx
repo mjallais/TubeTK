@@ -36,21 +36,30 @@ ConvertImagesToCSV( void )
 }
 
 template< class TInputMask, class TInputImage >
+itk::SimpleDataObjectDecorator<vnl_matrix <typename TInputImage::PixelType> >*
+ConvertImagesToCSV< TInputMask, TInputImage >::
+GetOutput()
+{
+  return m_ConvertImagesToCSVFilter->GetOutput();
+}
+
+template< class TInputMask, class TInputImage >
 void
 ConvertImagesToCSV< TInputMask, TInputImage >::
-AddImage(TInputImage* image)
+AddImage( TInputImage* image )
 {
-  m_ConvertImagesToCSVFilter->AddImage(image);
+  m_ConvertImagesToCSVFilter->AddImage( image );
 }
 
 template< typename TInputMask, typename TInputImage >
 void
 ConvertImagesToCSV< TInputMask, TInputImage >
-::PrintSelf(std::ostream & os, itk::Indent indent) const
+::PrintSelf( std::ostream & os, itk::Indent indent ) const
 {
-  Superclass::PrintSelf(os, indent);
+  Superclass::PrintSelf( os, indent );
   os << "Stride = " << m_ConvertImagesToCSVFilter->GetStride() << std::endl;
-  os << "NumImages = " << m_ConvertImagesToCSVFilter->GetNumImages() << std::endl;
+  os << "NumImages = " << m_ConvertImagesToCSVFilter->GetNumImages()
+    << std::endl;
 }
 
 } // end namespace tube

@@ -54,7 +54,6 @@ template< class TPixel, unsigned int VDimension >
 int DoIt( int argc, char * argv[] )
 {
   PARSE_ARGS;
-  std::cout << "Je suis la 1" << std::endl;
   typedef float                                     InputPixelType;
   typedef itk::Image< InputPixelType, VDimension >  InputImageType;
   typedef itk::ImageFileReader< InputImageType >    ReaderType;
@@ -63,38 +62,27 @@ int DoIt( int argc, char * argv[] )
   typedef itk::Image< MaskPixelType, VDimension >   InputMaskType;
   typedef itk::ImageFileReader< InputMaskType >     MaskReaderType;
 
-  std::cout << "Je suis la 1.1" << std::endl;
-
   typedef itk::tube::ConvertImagesToCSVFilter< InputMaskType, InputImageType >
     ConvertImagesToCSVFilterType;
   typename ConvertImagesToCSVFilterType::Pointer filter
           = ConvertImagesToCSVFilterType::New();
-  std::cout << "Je suis la 1.2" << std::endl;
 
   typename MaskReaderType::Pointer readerMask = MaskReaderType::New();
-  std::cout << "Je suis la 1.2.1" << std::endl;
 
   readerMask->SetFileName( inputImageFileName );
-  std::cout << "Je suis la 1.3" << std::endl;
 
   try
-  {
-    std::cout << "Je suis la 1.3.1" << std::endl;
+    {
     readerMask->Update();
-    std::cout << "Je suis la 1.4" << std::endl;
-
-  }
+    }
   catch ( itk::ExceptionObject & err )
-  {
+    {
     tube::ErrorMessage( "Reading volume: Exception caught: "
       + std::string(err.GetDescription()));
-    std::cout << "Je suis la 1.5" << std::endl;
-
     return EXIT_FAILURE;
-  }
+    }
 
   typename InputMaskType::Pointer inputMask = readerMask->GetOutput();
-  std::cout << "Je suis la 2" << std::endl;
 
   unsigned int numImages = 0;
   std::vector< std::string > imageFileNameList;
@@ -102,13 +90,13 @@ int DoIt( int argc, char * argv[] )
     imageFileNameList );
 
   if( stride < 1 )
-  {
+    {
     stride = 1;
-  }
+    }
   typename ReaderType::Pointer reader;
   std::vector<std::string> fileName;
   for( unsigned int i = 0; i < imageFileNameList.size(); ++i )
-  {
+    {
     reader = ReaderType::New();
     reader->SetFileName( imageFileNameList[i] );
     char filePath[4096];
@@ -129,18 +117,14 @@ int DoIt( int argc, char * argv[] )
       }
     filter->AddImage( reader->GetOutput() );
     ++numImages;
-  }
-  std::cout << "Je suis la 3" << std::endl;
+    }
 
   typedef vnl_matrix<InputPixelType> MatrixType;
-  // number of pixels/stride or less
   const unsigned int ARows =
     inputMask->GetLargestPossibleRegion().GetNumberOfPixels() / stride;
-  // +1 is for the "class"
   const unsigned int ACols = imageFileNameList.size() + 1;
   MatrixType matrix;
   matrix.set_size( ARows, ACols );
-  std::cout << "Je suis la 4" << std::endl;
 
   filter->SetInputMask( inputMask );
   filter->SetStride( stride );
@@ -149,14 +133,12 @@ int DoIt( int argc, char * argv[] )
   filter->Update();
 
   matrix = filter->GetOutput()->Get();
-  std::cout << "matrix :" << matrix << std::endl;
   unsigned int numberRows = filter->GetNumberRows();
   MatrixType submatrix = matrix.extract( numberRows, ACols );
 
   // write out the vnl_matrix object
   typedef itk::CSVNumericObjectFileWriter<InputPixelType> WriterType;
   WriterType::Pointer writer = WriterType::New();
-  std::cout << "Je suis la 5" << std::endl;
 
   writer->SetFieldDelimiterCharacter( ',' );
   writer->SetFileName( outputCSVFileName );
@@ -164,8 +146,6 @@ int DoIt( int argc, char * argv[] )
 
   fileName.push_back( "Class" );
   writer->SetColumnHeaders( fileName );
-  std::cout << "Je suis la 6" << std::endl;
-  std::cout << "je suis la 6.1" << std::endl;
 
   try
     {
@@ -177,7 +157,6 @@ int DoIt( int argc, char * argv[] )
     std::cerr << exp << std::endl;
     return EXIT_FAILURE;
     }
-  std::cout << "Je suis la 7" << std::endl;
 
   return EXIT_SUCCESS;
 }

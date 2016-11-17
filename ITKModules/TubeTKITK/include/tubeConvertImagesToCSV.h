@@ -33,7 +33,7 @@ limitations under the License.
 
 namespace tube
 {
-  template< typename  TInputMask,  typename TInputImage >
+template< typename TInputMask, typename TInputImage >
 class ConvertImagesToCSV:
   public itk::ProcessObject
 {
@@ -45,10 +45,10 @@ public:
   typedef itk::SmartPointer< const Self >                 ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ConvertImagesToCSV, ProcessObject);
+  itkTypeMacro( ConvertImagesToCSV, ProcessObject );
 
   typedef TInputMask                                      InputMaskType;
   typedef typename InputMaskType::PixelType               MaskPixelType;
@@ -56,31 +56,34 @@ public:
   typedef TInputImage                                     InputImageType;
   typedef typename InputImageType::PixelType              InputPixelType;
 
+  typedef itk::SimpleDataObjectDecorator< vnl_matrix < InputPixelType >>
+    OutputType;
+
   typedef itk::tube::ConvertImagesToCSVFilter< InputMaskType, InputImageType >
     ConvertImagesToCSVFilterType;
 
-  tubeWrapSetObjectMacro(InputMask, InputMaskType, ConvertImagesToCSVFilter);
-  tubeWrapGetObjectMacro(InputMask, InputMaskType, ConvertImagesToCSVFilter);
-  tubeWrapGetMacro(Output, vnl_matrix <InputPixelType>, ConvertImagesToCSVFilter);
-  tubeWrapGetMacro(Stride, unsigned int, ConvertImagesToCSVFilter);
-  tubeWrapSetMacro(Stride, unsigned int, ConvertImagesToCSVFilter);
-  tubeWrapSetMacro(NumImages, unsigned int, ConvertImagesToCSVFilter);
-  tubeWrapGetMacro(NumImages, unsigned int, ConvertImagesToCSVFilter);
-  tubeWrapSetMacro(NumberRows, unsigned int, ConvertImagesToCSVFilter);
-  tubeWrapGetMacro(NumberRows, unsigned int, ConvertImagesToCSVFilter);
-  void AddImage(InputImageType*);
+  tubeWrapSetObjectMacro( InputMask, InputMaskType, ConvertImagesToCSVFilter );
+  tubeWrapGetObjectMacro( InputMask, InputMaskType, ConvertImagesToCSVFilter );
+  OutputType* GetOutput();
+  tubeWrapGetMacro( Stride, unsigned int, ConvertImagesToCSVFilter );
+  tubeWrapSetMacro( Stride, unsigned int, ConvertImagesToCSVFilter );
+  tubeWrapSetMacro( NumImages, unsigned int, ConvertImagesToCSVFilter );
+  tubeWrapGetMacro( NumImages, unsigned int, ConvertImagesToCSVFilter );
+  tubeWrapSetMacro( NumberRows, unsigned int, ConvertImagesToCSVFilter );
+  tubeWrapGetMacro( NumberRows, unsigned int, ConvertImagesToCSVFilter );
+  void AddImage( InputImageType* );
 
-  tubeWrapCallMacro(Update, ConvertImagesToCSVFilter);
+  tubeWrapCallMacro( Update, ConvertImagesToCSVFilter );
 
 protected:
   ConvertImagesToCSV( void );
   ~ConvertImagesToCSV() {}
-  void PrintSelf(std::ostream & os, itk::Indent indent) const;
+  void PrintSelf( std::ostream & os, itk::Indent indent ) const;
 
 private:
   /** itkConvertImagesToCSVFilter parameters **/
-  ConvertImagesToCSV(const Self &);
-  void operator=(const Self &);
+  ConvertImagesToCSV( const Self & );
+  void operator=( const Self & );
 
   typename ConvertImagesToCSVFilterType::Pointer m_ConvertImagesToCSVFilter;
 
