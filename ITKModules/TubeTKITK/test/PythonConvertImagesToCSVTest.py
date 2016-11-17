@@ -82,7 +82,7 @@ def main():
 
   convertFilter.Update()
   numberRows=convertFilter.GetNumberRows()
-  matrix=convertFilter.GetOutput()
+  matrix=convertFilter.GetOutput().Get()
   
   narray=numpy.zeros((numberRows+1,matrix.cols()))
   
