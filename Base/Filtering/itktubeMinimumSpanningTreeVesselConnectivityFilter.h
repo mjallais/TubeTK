@@ -64,7 +64,7 @@ public:
   typedef VesselTubeSpatialObject< VDimension > TubeType;
   typedef typename TubeType::Pointer            TubePointerType;
   typedef typename TubeType::ConstPointer       TubeConstPointerType;
-  typedef itk::IndexValueType                   TubeIdType;
+  typedef IndexValueType                        TubeIdType;
   typedef std::vector< TubeIdType >             TubeIdListType;
 
   /** Run-time type information ( and related methods ).   */
