@@ -1,0 +1,7 @@
+itk_wrap_include( tubeMinimumSpanningTreeVesselConnectivity.h )
+
+itk_wrap_named_class("tube::MinimumSpanningTreeVesselConnectivity" tubeMinimumSpanningTreeVesselConnectivity POINTER)
+ foreach(d ${WRAP_ITK_USIGN_INT})
+    tk_wrap_template("${d}"  "${d}")
+ endforeach()
+itk_end_wrap_class()

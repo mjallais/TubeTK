@@ -44,7 +44,7 @@
 #include "metaScene.h"
 #include "tubeMacro.h"
 
-#include "itktubeMinimumSpanningTreeVesselConnectivityFilter.h"
+#include "tubeMinimumSpanningTreeVesselConnectivity.h"
 
 #include <sstream>
 
@@ -99,7 +99,7 @@ int DoIt( int argc, char * argv[] )
 
   timeCollector.Start( "Running vessel connectivity filter" );
 
-  typedef itk::tube::MinimumSpanningTreeVesselConnectivityFilter< VDimension >
+  typedef tube::MinimumSpanningTreeVesselConnectivity< VDimension >
   VesselConnectivityFilterType;
   typename VesselConnectivityFilterType::Pointer vesselConnectivityFilter =
   VesselConnectivityFilterType::New();
