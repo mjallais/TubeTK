@@ -44,7 +44,7 @@
 #include "metaScene.h"
 #include "tubeMacro.h"
 
-#include "itktubeMinimumSpanningTreeVesselConnectivityFilter.h"
+#include "tubeMinimumSpanningTreeVesselConnectivity.h"
 
 #include <sstream>
 
@@ -99,12 +99,11 @@ int DoIt( int argc, char * argv[] )
 
   timeCollector.Start( "Running vessel connectivity filter" );
 
-  typedef itk::tube::MinimumSpanningTreeVesselConnectivityFilter< VDimension >
+  typedef tube::MinimumSpanningTreeVesselConnectivity< VDimension >
   VesselConnectivityFilterType;
   typename VesselConnectivityFilterType::Pointer vesselConnectivityFilter =
   VesselConnectivityFilterType::New();
 
-  std::cout << " I am here 1 " << std::endl;
   vesselConnectivityFilter->SetInput( pTubeGroup );
   vesselConnectivityFilter->SetMaxTubeDistanceToRadiusRatio(
     maxTubeDistanceToRadiusRatio );
@@ -112,20 +111,14 @@ int DoIt( int argc, char * argv[] )
     maxContinuityAngleError );
   vesselConnectivityFilter->SetRemoveOrphanTubes( removeOrphanTubes );
 
-  std::cout << " I am here 2 " << std::endl;
   if( !rootTubeIdList.empty() )
     {
-    std::cout << " I am here 2.1 " << std::endl;
     typename VesselConnectivityFilterType::TubeIdListType
       IdList( rootTubeIdList.begin(), rootTubeIdList.end() );
-    std::cout << " I am here 2.2 " << std::endl;
     vesselConnectivityFilter->SetRootTubeIdList( IdList );
-    std::cout << " I am here 2.3 " << std::endl;
     }
 
-  std::cout << " I am here 3 " << std::endl;
   vesselConnectivityFilter->Update();
-  std::cout << " I am here 4 " << std::endl;
 
   timeCollector.Stop( "Running vessel connectivity filter" );
 

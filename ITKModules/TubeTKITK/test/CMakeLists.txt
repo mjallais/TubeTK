@@ -104,4 +104,51 @@ if( ITK_WRAP_PYTHON )
   set_property( TEST
     TubeTKITK.Python.ConvertShrunkenSeedImageToList-Test1-Compare
     APPEND PROPERTY DEPENDS TubeTKITK.Python.ConvertShrunkenSeedImageToList-Test1 )
+
+######################  PythonConvertTubesToTubeTree  ##########################
+  # Test1 - PythonConvertTubesToTubeTree - I-Junction
+  set( MODULE_NAME PythonConvertTubesToTubeTree )
+  Midas3FunctionAddTestWithEnv( NAME TubeTKITK.Python.ConvertTubesToTubeTree-Test1
+    COMMAND ${PYTHON_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_NAME}Test.py
+        MIDAS{I_Junction_3D.tre.md5}
+        ${TEMP}/${MODULE_NAME}Test1.tre
+        1
+        2.0
+        180
+        false
+    ENVIRONMENT ITK_BUILD_DIR=${ITK_DIR} TubeTK_BUILD_DIR=${TubeTK_BINARY_DIR} BUILD_TYPE=$<$<BOOL:${WIN32}>:$<CONFIG>>
+    )
+  # Test1 - Compare - PythonConvertTubesToTubeTree - I-Junction
+  Midas3FunctionAddTest( NAME
+    TubeTKITK.Python.ConvertTubesToTubeTree-Test1-Compare
+    COMMAND ${CompareTextFiles_EXE}
+      -t ${TEMP}/${MODULE_NAME}Test1.tre
+      -b MIDAS{I_Junction_3D_tree.tre.md5}
+      -d 0.01
+    )
+  set_property( TEST
+    TubeTKITK.Python.ConvertTubesToTubeTree-Test1-Compare
+    APPEND PROPERTY DEPENDS TubeTKITK.Python.ConvertTubesToTubeTree-Test1 )
+
+  # Test2 - PythonConvertTubesToTubeTree - Y-Junction
+  set( MODULE_NAME PythonConvertTubesToTubeTree )
+  Midas3FunctionAddTestWithEnv( NAME TubeTKITK.Python.ConvertTubesToTubeTree-Test2
+    COMMAND ${PYTHON_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_NAME}Test.py
+        MIDAS{Y_Junction_3D.tre.md5}
+        ${TEMP}/${MODULE_NAME}Test2.tre
+    ENVIRONMENT ITK_BUILD_DIR=${ITK_DIR} TubeTK_BUILD_DIR=${TubeTK_BINARY_DIR} BUILD_TYPE=$<$<BOOL:${WIN32}>:$<CONFIG>>
+    )
+  # Test2 - Compare - PythonConvertTubesToTubeTree - Y-Junction
+  Midas3FunctionAddTest( NAME
+    TubeTKITK.Python.ConvertTubesToTubeTree-Test2-Compare
+    COMMAND ${CompareTextFiles_EXE}
+      -t ${TEMP}/${MODULE_NAME}Test2.tre
+      -b MIDAS{Y_Junction_3D_tree.tre.md5}
+      -d 0.01
+    )
+  set_property( TEST
+    TubeTKITK.Python.ConvertTubesToTubeTree-Test2-Compare
+    APPEND PROPERTY DEPENDS TubeTKITK.Python.ConvertTubesToTubeTree-Test2 )
 endif()
